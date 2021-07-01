@@ -3,8 +3,15 @@ import requests
 import json
 
 def home(request):
+    if request.method == "POST":
+        if request.POST.get("zipcode").isdigit():
+            zipcode = request.POST.get("zipcode")
+        else:
+            pass
+    else:
+        zipcode = 10001 #defult NY city 
     try:
-        data = requests.get("https://www.airnowapi.org/aq/forecast/zipCode/?format=application/json&zipCode=20002&date=2021-07-01&distance=25&API_KEY=78AEA765-0785-4F86-83C5-BB4BA9BEBDDA")
+        data = requests.get(f"https://www.airnowapi.org/aq/forecast/zipCode/?format=application/json&zipCode={zipcode}&date=2021-07-01&distance=25&API_KEY=78AEA765-0785-4F86-83C5-BB4BA9BEBDDA")
         weather_data = json.loads(data.content.decode())[0]
         if weather_data["Category"]["Name"] == "Good":
             category_description = "Air quality is satisfactory, and air pollution poses little or no risk."
@@ -32,8 +39,7 @@ def home(request):
             
         context = {"data":weather_data,"category_color": category_color,"category_description" : category_description}
     except Exception as e:
-        print(e)
-        context = {"error" : True}
+        context = {"error" : "Unable to connect to API"}
     return render(request, 'home.html', context)
 
 def about(request):

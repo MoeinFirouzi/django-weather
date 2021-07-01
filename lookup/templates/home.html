@@ -6,7 +6,7 @@
 
 {% if data %}
     {% if error == True %}
-        <h2>ERROR</h2>
+        <h2>{{ error }}</h2>
     {% else %}
         <div class="jumbotron {{ category_color }}">
             <h1 style="margin: 15px;" class="display-6">{{ data.Category.Name }}</h1>
